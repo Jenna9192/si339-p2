@@ -1,40 +1,46 @@
+import csv
+
+csv_file = 'athletes'
+html_template_file = 'athlete_results_template.html'
+output_html_file = 'athlete_results.html'
+
+# Read CSV data
 with open(csv_file, newline='', encoding='utf-8') as file:
-   reader = csv.reader(file)
-   data = list(reader)
+    reader = csv.DictReader(file)
+    data = list(reader)
+
+meet_name = "Athletics Meet"
+meet_date = "2024" 
 
 
-# Extract the data from the CSV
-meet_name = data[1][0]  # Column A - h1 (Meet Name)
-meet_date = data[1][1]  # Column B - h2 (Meet Date)
-team_results_link = data[1][2]  # Column C - hyperlink for the team-results section
-folder_name = data[1][3]  # Column D - folder name used in photo-gallery links
-race_comments = data[1][4]  # Column E - race-comments section
+with open(html_template_file, 'r', encoding='utf-8') as template_file:
+    template = template_file.read()
 
+athlete_entries = ''
+for athlete in data[:2]: 
+    athlete_name = athlete['Name']
+    athlete_date = athlete['Date']
+    athlete_place = athlete['Overall Place']
+    athlete_time = athlete['Grade Time']
+    athlete_meet = athlete['Meet']
 
-# print(f"meet name {meet_name}")
-# print(f"meet_date {meet_date}")
-# print(f"folder_name {folder_name}")
-# print(f"race_comments{race_comments}")
+    athlete_entries += f'''
+        <li>
+            <strong>{athlete_name}</strong><br>
+            Date: {athlete_date}<br>
+            Place: {athlete_place}<br>
+            Time: {athlete_time}<br>
+            Meet: {athlete_meet}<br>
+        </li>
+    '''
 
+html_content = template.format(
+    meet_name=meet_name,
+    meet_date=meet_date,
+    athlete_entries=athlete_entries
+)
 
-# Athlete details start from row 2 (index 1)
-athletes = data[1:]
+with open(output_html_file, 'w', encoding='utf-8') as output_file:
+    output_file.write(html_content)
 
-
-# Start building the HTML structure
-html_content = f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel = "stylesheet" href = "css/reset.css">
-   <link rel = "stylesheet" href = "css/style.css">
-   <title>{meet_name} Country Meet</title>
-</head>
-<body>
-
-
-   <header>
-       <h1>{meet_name}</h1>
-       <h2>{meet_date}</h2>
-   </header>
+print("HTML file generated successfully.")
