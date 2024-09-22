@@ -24,15 +24,24 @@ files = os.listdir(folder)
 html_content = f"""
 <!DOCTYPE html>
 <html lang = en>
-<meta charset="UTF-8">
 <head>
+<meta charset="UTF-8">
     <title>Athlete Results</title>
 </head>
 <body>
     <header>
-        <title>Athlete Results</title>
+        <div class="logo">
+            <h1>Athlete Net</h1>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li>Home</li>
+                <li>Athletes</li>
+                <li>Events</li>
+            </ul>
+        </nav>
     </header>
-        <title>Women's Team Athletes</title>"""
+        <h1>Women's Team Athletes</h1>"""
 
 for filename in files:
     # Check if the file is a CSV file
@@ -54,13 +63,13 @@ for filename in files:
                 row_data['grade'] = row[2]
                 row_data['time'] = row[3]
                 row_data['date'] = row[4]
-                row_data['meet'] = row[5]
+                row_data['meet'] = row[5].replace("<", "")
                 data.append(row_data)
 
             # Create the HTML content
             # Create the HTML content with f-string substitution
             html_content += f"""
-            <h1><strong>Name:</strong> {name} ({id})</h1>
+            <h2><strong>Name:</strong> {name} ({id})</h2>
             <table>
                 <tr>
                     <th>Overall Place</th>
